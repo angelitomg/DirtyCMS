@@ -17,7 +17,7 @@ DirtyCMS has just few files:
 
 * **backend.php** - main back-end file
 * **db.sqlite** - database file
-* **frontend.php** - basic functions to query data on front-end interface
+* **frontend.php** - basic functions to query data in front-end interface
 * **index.php** - example file
 * **uploads/** - uploads directory
 * **.htaccess** - some basic Apache configs
