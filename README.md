@@ -5,15 +5,15 @@ This is a CMS?
 
 DirtyCMS is not a good software engineering example. It is a **eficiency** and **simplicity** example.
 
-Its desgined to be simply, powerful and fit in a single file.
+It was designed to be simply, powerful and fit in a single file.
 
 ## How to install
 
-Just copy DirtyCMS folder to your webroot folder and access **backend.php**.
+Just copy the DirtyCMS folder to your webroot folder and access **backend.php**.
 
 ## Structure
 
-DirtyCMS consists of a few files:
+DirtyCMS has just few files:
 
 * **backend.php** - main back-end file
 * **db.sqlite** - database file
