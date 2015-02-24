@@ -30,6 +30,6 @@ You can change default uploads path, changing **UPLOADS_PATH** constant on **bac
 
 ## Author
 
-AMG Labs(http://www.amglabs.net/)
+(AMG Labs http://www.amglabs.net/)
 
-Angelito M. Goulart(http://www.angelitomg.com/)
+(Angelito M. Goulart http://www.angelitomg.com/)
