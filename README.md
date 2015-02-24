@@ -24,9 +24,9 @@ DirtyCMS has just few files:
 
 ## Changing configs
 
-Is highly recommended move database file **out** of your webroot folder and change value of **SALT** constant. You can do this, change their values in files **backend.php** and **frontend.php**.
+It is strongly recommended move the **database file** out of the public folder of your web server. You must also change the value of the **SALT** constant.
 
-You can change default uploads path, changing **UPLOADS_PATH** constant on **backend.php**.
+Change these and other settings on backend.php and frontend.php.
 
 ## Author
 
