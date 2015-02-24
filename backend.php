@@ -1,12 +1,80 @@
 <?php session_start(); 
 
+    /**
+
+    The MIT License (MIT)
+
+    Copyright (c) 2015 Angelito M. Goulart
+
+    Permission is hereby granted, free of charge, to any person obtaining a copy
+    of this software and associated documentation files (the "Software"), to deal
+    in the Software without restriction, including without limitation the rights
+    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+    copies of the Software, and to permit persons to whom the Software is
+    furnished to do so, subject to the following conditions:
+
+    The above copyright notice and this permission notice shall be included in all
+    copies or substantial portions of the Software.
+
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+    SOFTWARE.
+
+    */
+
     // Configs
 
     define('DB_FILE', './db.sqlite');
     define('SALT', 'wCB8Z3x7LPv1bZvtAiyXqMFYQZALir');
     define('UPLOADS_PATH', 'uploads/');
+    define('LANG', 'pt-br');
     $status = array('type' => '', 'message' => '');
     $connection = null;
+
+    // Translate
+
+    $translate = array(
+        'Pages' => array('pt-br' => 'Páginas'),'Files' => array('pt-br' => 'Arquivos'),
+        'User' => array('pt-br' => 'Usuário'),
+        'Logout' => array('pt-br' => 'Sair'),
+        'Sign In' => array('pt-br' => 'Entrar'),
+        'Login error.' => array('pt-br' => 'Erro ao efetuar login.'),
+        'New Page' => array('pt-br' => 'Nova Página'),
+        'Name' => array('pt-br' => 'Nome'),
+        'Delete' => array('pt-br' => 'Excluir'),
+        'Save' => array('pt-br' => 'Salvar'),
+        'Title' => array('pt-br' => 'Título'),
+        'Description' => array('pt-br' => 'Descrição'),
+        'Content' => array('pt-br' => 'Conteúdo'),
+        'Page saved successfully.' => array('pt-br' => 'Página salva com sucesso.'),
+        'Error while saving page.' => array('pt-br' => 'Erro ao salvar página.'),
+        'Page removed sucessfully.' => array('pt-br' => 'Página excluída com sucesso.'),
+        'Error while removing page.' => array('pt-br' => 'Erro ao excluir página.'),
+        'New File' => array('pt-br' => 'Novo Arquivo'),
+        'File' => array('pt-br' => 'Arquivo'),
+        'File uploaded sucessfully.' => array('pt-br' => 'Arquivo enviado com sucesso.'),
+        'Error while saving file.' => array('pt-br' => 'Erro ao salvar arquivo.'),
+        'Error while uploading file. Uploads path is writeable?' => array(
+            'pt-br' => 'Erro ao enviar arquivo. O diretório de uploads tem permissão de escrita?'
+        ),
+        'Error while uploading file.' => array('pt-br' => 'Erro ao enviar arquivo.'),
+        'File removed sucessfully.' => array('pt-br' => 'Arquivo excluído com sucesso.'),
+        'Error while removing file.' => array('pt-br' => 'Erro ao excluir arquivo.'),
+        'User updated sucessfully.' => array('pt-br' => 'Usuário atualizado com sucesso.'),
+        'Error while updating user.' => array('pt-br' => 'Erro ao atualizar usuário.'),
+        'Username' => array('pt-br' => 'Nome de usuário'),
+        'Password' => array('pt-br' => 'Senha'),
+
+    );
+
+    function __($str){
+        global $translate;
+        return (isset($translate[$str][LANG])) ? $translate[$str][LANG] : $str;
+    }
 
     // Template functions
 
@@ -19,7 +87,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Bootstrap 101 Template</title>
+    <title>Dirty CMS - Backend</title>
 
     <!-- Bootstrap -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
@@ -44,19 +112,21 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="backend.php">Dirty CMS</a>
+          <a class="navbar-brand" href="backend.php">
+            <span style="color: brown;font-weight: bold;">D</span>irty CMS
+          </a>
         </div>
 
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
           <ul class="nav navbar-nav">
-            <li class="pages_active"><a href="backend.php?action=show-pages">Pages</a></li>
-            <li class="files_active"><a href="backend.php?action=show-files">Files</a></li>
-            <li class="user_active"><a href="backend.php?action=form-user">User</a></li>
+            <li class="pages_active"><a href="backend.php?action=show-pages">' . __('Pages') . '</a></li>
+            <li class="files_active"><a href="backend.php?action=show-files">' . __('Files') . '</a></li>
+            <li class="user_active"><a href="backend.php?action=form-user">' . __('User') . '</a></li>
             ';
 
         if (isset($_SESSION['username'])) $str .= '
-            <li><a href="backend.php?action=do-logout">Logout</a></li>
+            <li><a href="backend.php?action=do-logout">' . __('Logout') . '</a></li>
         ';
 
         $str .= '
@@ -77,7 +147,7 @@
             $str .= '
     <div class="alert alert-' . $status['type'] . '">
         <a href="#" class="close" data-dismiss="alert">&times;</a>
-        ' . $status['message'] . '
+        ' . __($status['message']) . '
     </div>';
         }
 
@@ -110,7 +180,7 @@
             <input type="password" name="password" class="form-control input-lg" placeholder="123456">
         </div>
         <div class="form-group">
-            <button type="submit" class="btn btn-success btn-lg btn-block">Sign In</button>
+            <button type="submit" class="btn btn-success btn-lg btn-block">' . __('Sign In') . '</button>
         </div>
     </form>
         ';
@@ -151,6 +221,7 @@
 
         if (isset($_SESSION['username'])) unset($_SESSION['username']);
         formLogin();
+        poweroff();
 
     }
 
@@ -164,13 +235,13 @@
     <div class="panel panel-default">
 
       <!-- Default panel contents -->
-      <div class="panel-heading"><a href="backend.php?action=form-pages" class="">New Page</a></div>
+      <div class="panel-heading"><a href="backend.php?action=form-pages" class="">' . __('New Page') . '</a></div>
 
       <!-- Table -->
       <table class="table">
         <tr>
-            <th>ID</th>
-            <th>Name</th>
+            <th>' . __('ID') . '</th>
+            <th>' . __('Name') . '</th>
             <th></th>
         </tr>';
 
@@ -183,7 +254,7 @@
                 <td><a href="backend.php?action=form-pages&id=' . $row['id'] . '">' . $row['name'] . '</a></td>
                 <td>
                     <a href="backend.php?action=delete-page&id=' . $row['id'] . '" class="btn btn-primary">
-                        Delete
+                        ' . __('Delete') . '
                     </a>
                 </td>
             </tr>
@@ -217,28 +288,29 @@
         $str .= '
     <form action="backend.php?action=save-page&id=' . $id . '" method="post">
         <div class="form-group">
-          <input type="text" class="form-control input-lg" placeholder="Name" name="name" 
+          <input type="text" class="form-control input-lg" placeholder="' . __('Name') . '" name="name" 
             value="' . $data['name'] . '">
         </div>
 
         <div class="form-group">
-          <input type="text" class="form-control input-lg" placeholder="Title" name="title"
+          <input type="text" class="form-control input-lg" placeholder="' . __('Title') . '" name="title"
             value="' . $data['title'] . '">
         </div>
 
         <div class="form-group">
-          <textarea class="form-control input-lg" rows="3" placeholder="Description" 
+          <textarea class="form-control input-lg" rows="3" placeholder="' . __('Description') . '" 
             name="description">' . $data['description'] . '</textarea>
         </div>
 
         <div class="form-group">
-          <textarea name="content" class="form-control ckeditor input-lg" rows="3" placeholder="Content" name="content">
+          <textarea name="content" class="form-control ckeditor input-lg" 
+          rows="3" placeholder="' . __('Content') . '" name="content">
         ' . $data['content'] . '
           </textarea>
         </div>
 
         <div class="form-group">
-            <button class="btn btn-success btn-lg btn-block">Save</button>
+            <button class="btn btn-success btn-lg btn-block">' . __('Save') . '</button>
         </div>
 
     </form>
@@ -316,13 +388,13 @@
     <div class="panel panel-default">
 
       <!-- Default panel contents -->
-      <div class="panel-heading"><a href="backend.php?action=form-files" class="">New File</a></div>
+      <div class="panel-heading"><a href="backend.php?action=form-files" class="">' . __('New File') . '</a></div>
 
       <!-- Table -->
       <table class="table">
         <tr>
-            <th>ID</th>
-            <th>Name</th>
+            <th>' . __('ID') . '</th>
+            <th>' . __('Name') . '</th>
             <th></th>
         </tr>';
 
@@ -335,7 +407,7 @@
                 <td><a target="_blank" href="' . UPLOADS_PATH . $row['filename'] . '">' . $row['name'] . '</a></td>
                 <td>
                     <a href="backend.php?action=delete-file&id=' . $row['id'] . '" class="btn btn-primary">
-                        Delete
+                        ' . __('Delete') . '
                     </a>
                 </td>
             </tr>
@@ -356,16 +428,16 @@
         $str .= '
     <form action="backend.php?action=save-file" method="post" enctype="multipart/form-data">
         <div class="form-group">
-            <label for="name">Name</label>
+            <label for="name">' . __('Name') . '</label>
             <input type="text" class="form-control input-lg" id="name" name="name"
             value="" required>
         </div>
         <div class="form-group">
-            <label for="file">File</label>
+            <label for="file">' . __('File') . '</label>
             <input type="file" class="form-control input-lg" id="file" name="file" required>
         </div>
         <div class="form-group">
-            <button class="btn btn-success btn-lg btn-block">Save</button>
+            <button class="btn btn-success btn-lg btn-block">' . __('Save') . '</button>
         </div>
     </form>
         ';
@@ -461,16 +533,16 @@
         $str .= '
     <form action="backend.php?action=update-user" method="post">
         <div class="form-group">
-            <label for="username">Username</label>
+            <label for="username">' . __('Username') . '</label>
             <input type="text" class="form-control input-lg" id="username" name="username"
             value="' . $username . '">
         </div>
         <div class="form-group">
-            <label for="pwd">Password</label>
+            <label for="pwd">' . __('Password') . '</label>
             <input type="password" class="form-control input-lg" id="pwd" name="password" required>
         </div>
         <div class="form-group">
-            <button class="btn btn-success btn-lg btn-block">Save</button>
+            <button class="btn btn-success btn-lg btn-block">' . __('Save') . '</button>
         </div>
     </form>
         ';
@@ -550,12 +622,10 @@
 
     // Poweroff function
 
-    function poweroff(){
+    function poweroff($msg = ''){
         global $connection;
         $connection->close();
-        if ($msg) {
-            die($msg);
-        }
+        die($msg);
     }
 
     // Start app
