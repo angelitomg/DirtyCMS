@@ -32,20 +32,19 @@
     // - Here are general configs. You can change these configs.
 
     error_reporting(0);
-    define('DB_FILE', './db.sqlite');
+    define('DB_FILE', dirname(__FILE__) . '/db.sqlite');
     define('UPLOADS_PATH', 'uploads/');
     define('CONTACT_EMAIL', 'test@example.com');
 
     // DB connection
 
-    global $connection;
-    $connection = new SQLite3(DB_FILE, SQLITE3_OPEN_READONLY);
+    $connection = new SQLite3(DB_FILE, SQLITE3_OPEN_READWRITE);    
 
     // - Dont touch here
 
     // Query functions
 
-    function getRows() {
+    function getRows($sql) {
         global $connection;
         $query = $connection->query($sql);
         while ($row = $query->fetchArray()){
@@ -61,7 +60,7 @@
 
     function getPages($name = ''){
         $sql = "SELECT * FROM pages";
-        if (!empty($pages)) $sql .= " WHERE name LIKE '%{$name}%'";
+        if (!empty($name)) $sql .= " WHERE name LIKE '%{$name}%'";
         $sql .= " ORDER BY name";
         return getRows($sql);
     }
@@ -87,7 +86,5 @@
     }
 
     // DB connection close
-
-    $connection->close();
 
 ?>
