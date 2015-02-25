@@ -30,7 +30,7 @@
     define('DB_FILE', './db.sqlite');
     define('SALT', 'wCB8Z3x7LPv1bZvtAiyXqMFYQZALir');
     define('UPLOADS_PATH', 'uploads/');
-    define('LANG', 'pt-br');
+    define('LANG', ''); // Default en. Optional pt-br.
     $status = array('type' => '', 'message' => '');
     $connection = null;
 

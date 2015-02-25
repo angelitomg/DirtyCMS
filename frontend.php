@@ -25,15 +25,22 @@
      * SOFTWARE.
      */
     
+    // - Hello, I'm DirtyCMS :)
+
     // Configs
+
+    // - Here are general configs. You can change these configs.
 
     define('DB_FILE', './db.sqlite');
     define('UPLOADS_PATH', 'uploads/');
+    define('CONTACT_EMAIL', 'test@example.com');
 
     // DB connection
 
     global $connection;
     $connection = new SQLite3(DB_FILE, SQLITE3_OPEN_READONLY);
+
+    // - Dont touch here
 
     // Query functions
 
@@ -46,19 +53,29 @@
         return $data;
     }
 
+    // - To get all pages contents, call function without parameters.
+    // - If you want a list of pages, pass as parameter a piece of page name (page name is defined on backend).
+    // - To get a specific page, pass as parameter the page full name.
+    // - These instructions are also applied to files.
+
     function getPages($name = ''){
-        $sql = "SELECT * FROM pages"
+        $sql = "SELECT * FROM pages";
         if (!empty($pages)) $sql .= " WHERE name LIKE '%{$name}%'";
         $sql .= " ORDER BY name";
         return getRows($sql);
     }
 
     function getFiles($name = ''){
-        $sql = "SELECT * FROM files"
+        $sql = "SELECT * FROM files";
         if (!empty($pages)) $sql .= " WHERE name LIKE '%{$name}%'";
         $sql .= " ORDER BY name";
         return getRows($sql);
     }
+
+    // - Here a contact form function. This must send a mail to address defined on configs.
+    // - Must receive as parameter a array with these fields: 'name', 'telephone', 'email', 'subject', 'message'.
+    // - The returned value is a array with two fields: status, message. The status value is success or danger.
+    // - The message is a custom string which can be modified on contactForm function body.
 
     // Contact form function
 
