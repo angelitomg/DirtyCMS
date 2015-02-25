@@ -22,7 +22,7 @@
       <h1>Welcome to <span style="font-weight: bold; color: brown;">D</span>irtyCMS</h1>
       <p>A quick and dirty CMS system. Designed to be simple and efficient.</p>
       <p>To query DirtyCMS data, just include <strong>frontend.php</strong> on your page and see <strong>frontend.php</strong> source. It's really easy!</p>
-      <p><a class="btn btn-primary btn-lg" href="backend.php" role="button">Go to back-end</a></p>
+      <p><a class="btn btn-success btn-lg" href="backend.php" role="button">Go to back-end</a></p>
     </div>
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
