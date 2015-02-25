@@ -34,22 +34,19 @@
     error_reporting(0);
     define('DB_FILE', dirname(__FILE__) . '/db.sqlite');
     define('UPLOADS_PATH', 'uploads/');
-    define('CONTACT_EMAIL', 'test@example.com');
-
-    // DB connection
-
-    $connection = new SQLite3(DB_FILE, SQLITE3_OPEN_READWRITE);    
+    define('CONTACT_EMAIL', 'test@example.com'); 
 
     // - Dont touch here
 
     // Query functions
 
     function getRows($sql) {
-        global $connection;
+        $connection = new SQLite3(DB_FILE, SQLITE3_OPEN_READWRITE);
         $query = $connection->query($sql);
         while ($row = $query->fetchArray()){
             $data[] = $row;
         }
+        $connection->close();
         return $data;
     }
 
@@ -84,7 +81,5 @@
         // To be implemented...
 
     }
-
-    // DB connection close
 
 ?>
