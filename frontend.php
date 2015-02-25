@@ -32,16 +32,16 @@
     // - Here are general configs. You can change these configs.
 
     error_reporting(0);
-    define('DB_FILE', dirname(__FILE__) . '/db.sqlite');
-    define('UPLOADS_PATH', 'uploads/');
-    define('CONTACT_EMAIL', 'test@example.com'); 
+    define('DIRTYCMS_DB_FILE', dirname(__FILE__) . '/db.sqlite');
+    define('DIRTYCMS_UPLOADS_PATH', dirname(__FILE__) . '/uploads/');
+    define('DIRTYCMS_CONTACT_EMAIL', 'test@example.com'); 
 
     // - Dont touch here
 
     // Query functions
 
-    function getRows($sql) {
-        $connection = new SQLite3(DB_FILE, SQLITE3_OPEN_READWRITE);
+    function DirtyCMS_getRows($sql) {
+        $connection = new SQLite3(DIRTYCMS_DB_FILE, SQLITE3_OPEN_READWRITE);
         $query = $connection->query($sql);
         while ($row = $query->fetchArray()){
             $data[] = $row;
@@ -55,18 +55,18 @@
     // - To get a specific page, pass as parameter the page full name.
     // - These instructions are also applied to files.
 
-    function getPages($name = ''){
+    function DirtyCMS_getPages($name = ''){
         $sql = "SELECT * FROM pages";
         if (!empty($name)) $sql .= " WHERE name LIKE '%{$name}%'";
         $sql .= " ORDER BY name";
-        return getRows($sql);
+        return DirtyCMS_getRows($sql);
     }
 
-    function getFiles($name = ''){
+    function DirtyCMS_getFiles($name = ''){
         $sql = "SELECT * FROM files";
         if (!empty($pages)) $sql .= " WHERE name LIKE '%{$name}%'";
         $sql .= " ORDER BY name";
-        return getRows($sql);
+        return DirtyCMS_getRows($sql);
     }
 
     // - Here a contact form function. This must send a mail to address defined on configs.
@@ -76,7 +76,7 @@
 
     // Contact form function
 
-    function contactForm($data){
+    function DirtyCMS_contactForm($data){
 
         // To be implemented...
 

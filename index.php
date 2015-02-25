@@ -1,5 +1,5 @@
 <?php include 'frontend.php'; ?>
-<?php $page = getPages('homepage'); ?>
+<?php $page = DirtyCMS_getPages('homepage'); ?>
 <!DOCTYPE html>
 <html lang="en">
   <head>
