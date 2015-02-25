@@ -5,7 +5,7 @@ This is a CMS?
 
 DirtyCMS is not a good software engineering example. It is a **eficiency** and **simplicity** example.
 
-It was designed to be simply, powerful and fit in a single file.
+It was designed to be simple, powerful and fit into just a few files.
 
 ## How to install
 
