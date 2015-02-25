@@ -31,6 +31,7 @@
 
     // - Here are general configs. You can change these configs.
 
+    error_reporting(0);
     define('DB_FILE', './db.sqlite');
     define('UPLOADS_PATH', 'uploads/');
     define('CONTACT_EMAIL', 'test@example.com');

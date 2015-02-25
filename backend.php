@@ -27,6 +27,7 @@
 
     // Configs
 
+    error_reporting(0);
     define('DB_FILE', './db.sqlite');
     define('SALT', 'wCB8Z3x7LPv1bZvtAiyXqMFYQZALir');
     define('UPLOADS_PATH', 'uploads/');
