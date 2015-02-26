@@ -42,6 +42,7 @@
     // Query functions
 
     function DirtyCMS_getRows($sql) {
+	$data = array();
         $connection = new SQLite3(DIRTYCMS_DB_FILE, SQLITE3_OPEN_READWRITE);
         $query = $connection->query($sql);
         while ($row = $query->fetchArray()){
