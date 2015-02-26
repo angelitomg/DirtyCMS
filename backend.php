@@ -396,6 +396,7 @@
         <tr>
             <th>' . __('ID') . '</th>
             <th>' . __('Name') . '</th>
+            <th>' . __('Description') . '</th>
             <th></th>
         </tr>';
 
@@ -406,6 +407,7 @@
             <tr>
                 <td>' . $row['id'] . '</td>
                 <td><a target="_blank" href="' . UPLOADS_PATH . $row['filename'] . '">' . $row['name'] . '</a></td>
+                <td>' . $row['description'] . '</td>
                 <td>
                     <a href="backend.php?action=delete-file&id=' . $row['id'] . '" class="btn btn-primary">
                         ' . __('Delete') . '
@@ -434,6 +436,11 @@
             value="" required>
         </div>
         <div class="form-group">
+            <label for="description">' . __('Description') . '</label>
+            <input type="text" class="form-control input-lg" id="description" name="description"
+            value="">
+        </div>
+        <div class="form-group">
             <label for="file">' . __('File') . '</label>
             <input type="file" class="form-control input-lg" id="file" name="file" required>
         </div>
@@ -458,6 +465,7 @@
         global $status;
 
         $name = (isset($post['name'])) ? $connection->escapeString($post['name']) : '';
+        $description = (isset($post['description'])) ? $connection->escapeString($post['description']) : '';
 
         if (is_file($file['file']['tmp_name'])){
 
@@ -472,7 +480,8 @@
                 showFiles();
                 poweroff();
             } else {
-                $sql = "INSERT INTO files (name, filename) VALUES ('{$name}', '{$filename}')";
+                $sql = "INSERT INTO files (name, description, filename) 
+                        VALUES ('{$name}', '{$description}', '{$filename}')";
                 if ($connection->exec($sql)) {
                     $status['type'] = 'success';
                     $status['message'] = 'File uploaded sucessfully.';
