@@ -66,7 +66,7 @@
 
     function DirtyCMS_getFiles($name = ''){
         $sql = "SELECT * FROM files";
-        if (!empty($pages)) $sql .= " WHERE name LIKE '%{$name}%'";
+        if (!empty($name)) $sql .= " WHERE name LIKE '%{$name}%'";
         $sql .= " ORDER BY name";
         return DirtyCMS_getRows($sql);
     }
