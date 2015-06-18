@@ -27,7 +27,8 @@
 
     // Configs
 
-    error_reporting(0);
+    error_reporting(E_ALL);
+    ini_set('display_errors', true);
     define('DB_FILE', dirname(__FILE__) . '/db.sqlite');
     define('SALT', 'wCB8Z3x7LPv1bZvtAiyXqMFYQZALir');
     define('UPLOADS_PATH', 'uploads/');
@@ -46,6 +47,7 @@
         'New Page' => array('pt-br' => 'Nova Página'),
         'Name' => array('pt-br' => 'Nome'),
         'Delete' => array('pt-br' => 'Excluir'),
+        'Edit' => array('pt-br' => 'Editar'),
         'Save' => array('pt-br' => 'Salvar'),
         'Title' => array('pt-br' => 'Título'),
         'Description' => array('pt-br' => 'Descrição'),
@@ -156,7 +158,7 @@
     }
 
     function getFooter(){
-        $str .= '
+        $str = '
         <p class="text-center"><a href="http://www.amglabs.net/" target="_blank"><small>AMG Labs</small></a></p>
     <!-- jQuery (necessary for Bootstrap\'s JavaScript plugins) -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
@@ -254,6 +256,9 @@
                 <td>' . $row['id'] . '</td>
                 <td><a href="backend.php?action=form-pages&id=' . $row['id'] . '">' . $row['name'] . '</a></td>
                 <td>
+                    <a href="backend.php?action=form-pages&id=' . $row['id'] . '" class="btn btn-primary">
+                        ' . __('Edit') . '
+                    </a>
                     <a href="backend.php?action=delete-page&id=' . $row['id'] . '" class="btn btn-primary">
                         ' . __('Delete') . '
                     </a>
@@ -409,6 +414,9 @@
                 <td><a target="_blank" href="' . UPLOADS_PATH . $row['filename'] . '">' . $row['name'] . '</a></td>
                 <td>' . $row['description'] . '</td>
                 <td>
+                    <a href="backend.php?action=form-files&id=' . $row['id'] . '" class="btn btn-primary">
+                        ' . __('Edit') . '
+                    </a>
                     <a href="backend.php?action=delete-file&id=' . $row['id'] . '" class="btn btn-primary">
                         ' . __('Delete') . '
                     </a>
@@ -425,24 +433,36 @@
 
     }
 
-    function formFiles(){
+    function formFiles($id = 0){
+
+        global $connection;
+
+        $data = array('name' => '', 'description' => '');
+
+        $query = $connection->query("SELECT * FROM files WHERE id = {$id}");
+        $query = $query->fetchArray();
+
+        if (!empty($query)) {
+            $data['name']        = $query['name'];
+            $data['description'] = $query['description'];
+        }
 
         $str = getHeader('files');
         $str .= '
-    <form action="backend.php?action=save-file" method="post" enctype="multipart/form-data">
+    <form action="backend.php?action=save-file&id=' . $id . '" method="post" enctype="multipart/form-data">
         <div class="form-group">
             <label for="name">' . __('Name') . '</label>
             <input type="text" class="form-control input-lg" id="name" name="name"
-            value="" required>
+            value="' . $data['name'] . '" required>
         </div>
         <div class="form-group">
             <label for="description">' . __('Description') . '</label>
             <input type="text" class="form-control input-lg" id="description" name="description"
-            value="">
+            value="' . $data['description'] . '">
         </div>
         <div class="form-group">
             <label for="file">' . __('File') . '</label>
-            <input type="file" class="form-control input-lg" id="file" name="file" required>
+            <input type="file" class="form-control input-lg" id="file" name="file">
         </div>
         <div class="form-group">
             <button class="btn btn-success btn-lg btn-block">' . __('Save') . '</button>
@@ -456,6 +476,8 @@
 
     function saveFile($post = array(), $file = array()){
 
+        $id = (isset($_GET['id'])) ? (int) $_GET['id'] : 0;
+
         if (!in_array($_SERVER['REQUEST_METHOD'], array('POST', 'PUT'))){
             showFiles();
             poweroff();
@@ -467,7 +489,7 @@
         $name = (isset($post['name'])) ? $connection->escapeString($post['name']) : '';
         $description = (isset($post['description'])) ? $connection->escapeString($post['description']) : '';
 
-        if (is_file($file['file']['tmp_name'])){
+        if (isset($file['file']) && is_file($file['file']['tmp_name'])){
 
             $ext = explode('.', $file['file']['name']);
             $ext = end($ext);
@@ -479,21 +501,37 @@
                 $status['message'] = 'Error while uploading file. Uploads path is writeable?';
                 showFiles();
                 poweroff();
-            } else {
-                $sql = "INSERT INTO files (name, description, filename) 
-                        VALUES ('{$name}', '{$description}', '{$filename}')";
-                if ($connection->exec($sql)) {
-                    $status['type'] = 'success';
-                    $status['message'] = 'File uploaded sucessfully.';
-                } else {
-                    $status['type'] = 'danger';
-                    $status['message'] = 'Error while saving file.';
-                }
-            }
+            } 
+
+        }
+
+        if ($id > 0) {
+
+            $query = $connection->query("SELECT * FROM files WHERE id = {$id}");
+            $query = $query->fetchArray();
+
+            $id = (int) $_GET['id'];
+            $sql = "UPDATE files SET name = '{$name}', description = '{$description}'";
+
+            if (isset($filename)){
+                $sql .= ", filename = '{$filename}'";
+                if (is_file(UPLOADS_PATH . $query['filename'])) unlink(UPLOADS_PATH . $query['filename']);   
+            } 
+
+            $sql .= " WHERE id = {$id}";
 
         } else {
+            if (!isset($filename)) $filename = '';
+            $sql = "INSERT INTO files (name, description, filename) 
+                    VALUES ('{$name}', '{$description}', '{$filename}')";
+        }
+
+        if ($connection->exec($sql)) {
+            $status['type'] = 'success';
+            $status['message'] = 'File uploaded sucessfully.';
+        } else {
             $status['type'] = 'danger';
-            $status['message'] = 'Error while uploading file.';
+            $status['message'] = 'Error while saving file.';
         }
 
         showFiles();
@@ -614,7 +652,7 @@
             case 'delete-page': deletePage($id); break;
 
             case 'show-files': showFiles(); break;
-            case 'form-files': formFiles(); break;
+            case 'form-files': formFiles($id); break;
             case 'save-file': saveFile($_POST, $_FILES); break;
             case 'delete-file': deleteFile($id); break;
 
